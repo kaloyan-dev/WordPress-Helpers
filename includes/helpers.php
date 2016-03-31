@@ -2,8 +2,8 @@
 
 # Custom array_chunk() that makes X number of chunks
 # instead of chunks with X number of items
-function crb_array_chunk( $array = array(), $per_column = 2 ) {
-	$per_chunk = ceil( count( $array ) / $per_column  );
+function crb_array_chunk( $array = array(), $chunks = 2 ) {
+	$per_chunk = ceil( count( $array ) / $chunks  );
 
 	return array_chunk( $array, $per_chunk );
 }

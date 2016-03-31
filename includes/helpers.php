@@ -1,5 +1,33 @@
 <?php
 
+# Custom array_chunk() that makes X number of chunks
+# instead of chunks with X number of items
+function crb_array_chunk( $array = array(), $per_column = 2 ) {
+	$per_chunk = ceil( count( $array ) / $per_column  );
+
+	return array_chunk( $array, $per_chunk );
+}
+
+# Gets a list of specific post type(s)
+function crb_get_posts_list( $post_type = 'post', $posts_per_page = -1, $orderby = 'title', $order = 'ASC', $additional_args = array() ) {
+	$list = array();
+	
+	$args = array_merge( array(
+		'post_type'      => $post_type,
+		'posts_per_page' => $posts_per_page,
+		'orderby'        => $orderby,
+		'order'          => $order,
+	), $additional_args );
+	
+	$posts = get_posts( $args );
+
+	foreach ( $posts as $p ) {
+		$list[$p->ID] = $p->post_title;
+	}
+
+	return $list;
+}
+
 # -------------------------------------------------------------
 #  Helper function for Carbon Fields complex field labels
 #

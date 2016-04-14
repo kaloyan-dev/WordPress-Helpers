@@ -73,3 +73,25 @@ function crb_wpthumb( $id, $width = 0, $height = 0, $src = false, $crop = true, 
 	}
 	echo wp_get_attachment_image( $id, $size, false, $attr );
 }
+
+# -------------------------------------------------------------
+# Enqueue WooCommerce price filter slider
+#
+# Requirements:
+# - WooCommerce: https://www.woothemes.com/woocommerce/
+# -------------------------------------------------------------
+function crb_enqueue_woocommerce_slider() {
+	if ( ! function_exists( 'WC' ) || wp_script_is( 'wc-price-slider', 'enqueue' ) ) {
+		return;
+	}
+	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	wp_register_script( 'wc-jquery-ui-touchpunch', WC()->plugin_url() . '/assets/js/jquery-ui-touch-punch/jquery-ui-touch-punch' . $suffix . '.js', array( 'jquery-ui-slider' ), WC_VERSION, true );
+	wp_register_script( 'wc-price-slider', WC()->plugin_url() . '/assets/js/frontend/price-slider' . $suffix . '.js', array( 'jquery-ui-slider', 'wc-jquery-ui-touchpunch' ), WC_VERSION, true );
+	wp_localize_script( 'wc-price-slider', 'woocommerce_price_slider_params', array(
+		'currency_symbol' => get_woocommerce_currency_symbol(),
+		'currency_pos'    => get_option( 'woocommerce_currency_pos' ),
+		'min_price'       => isset( $_GET['min_price'] ) ? esc_attr( $_GET['min_price'] ) : '',
+		'max_price'       => isset( $_GET['max_price'] ) ? esc_attr( $_GET['max_price'] ) : ''
+	) );
+	wp_enqueue_script( 'wc-price-slider' );
+}

@@ -95,3 +95,37 @@ function crb_enqueue_woocommerce_slider() {
 	) );
 	wp_enqueue_script( 'wc-price-slider' );
 }
+
+# -------------------------------------------------------------
+# Get the minimum and maximum price of products
+#
+# Requirements:
+# - WooCommerce: https://www.woothemes.com/woocommerce/
+# -------------------------------------------------------------
+function crb_get_product_prices( $term_id = false ) {
+	$prices = array(
+		'min' => 1,
+		'max' => 100
+	);
+	global $wpdb;
+	$sql_start = "
+		SELECT MIN( meta_value+0 ) as min, MAX( meta_value+0 ) as max
+		FROM {$wpdb->posts}
+	";
+	$sql_middle = "INNER JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)";
+	if ( $term_id ) {
+		$sql_middle = "INNER JOIN {$wpdb->term_relationships} ON ({$wpdb->posts}.ID = {$wpdb->term_relationships}.object_id)" . $sql_middle;
+		$sql_middle .= "WHERE ( {$wpdb->term_relationships}.term_taxonomy_id IN (%d) )";
+	}
+	$sql_end = "
+		AND {$wpdb->posts}.post_type   = 'product' 
+		AND {$wpdb->posts}.post_status = 'publish' 
+		AND {$wpdb->postmeta}.meta_key = '_price'
+	";
+	$sql = $sql_start . $sql_middle . $sql_end;
+	if ( $term_id ) {
+		$sql = $wpdb->prepare( $sql, $term_id );
+	}
+	$prices = $wpdb->get_row( $sql );
+	return $prices;
+}

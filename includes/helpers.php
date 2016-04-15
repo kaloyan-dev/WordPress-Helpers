@@ -1,14 +1,18 @@
 <?php
 
+# -------------------------------------------------------------
 # Custom array_chunk() that makes X number of chunks
 # instead of chunks with X number of items
+# -------------------------------------------------------------
 function crb_array_chunk( $array = array(), $chunks = 2 ) {
 	$per_chunk = ceil( count( $array ) / $chunks  );
 
 	return array_chunk( $array, $per_chunk );
 }
 
+# -------------------------------------------------------------
 # Gets a list of specific post type(s)
+# -------------------------------------------------------------
 function crb_get_posts_list( $post_type = 'post', $posts_per_page = -1, $orderby = 'title', $order = 'ASC', $additional_args = array() ) {
 	$list = array();
 	

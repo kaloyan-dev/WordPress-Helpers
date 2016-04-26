@@ -11,6 +11,23 @@ function crb_array_chunk( $array = array(), $chunks = 2 ) {
 }
 
 # -------------------------------------------------------------
+# Checks if any of the provided arguments is false
+# -------------------------------------------------------------
+function crb_check_args() {
+	$valid = true;	
+	$args  = func_get_args();
+
+	foreach ( $args as $arg ) {
+		if ( ! $arg ) {
+			$valid = false;
+			break;
+		}
+	}
+
+	return $valid;
+}
+
+# -------------------------------------------------------------
 # Gets a list of specific post type(s)
 # -------------------------------------------------------------
 function crb_get_posts_list( $post_type = 'post', $posts_per_page = -1, $orderby = 'title', $order = 'ASC', $additional_args = array() ) {

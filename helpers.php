@@ -60,7 +60,7 @@ function crb_complex_labels( $singular = false, $plural = false ) {
 		$singular = __( 'Entry', 'crb' );
 	}
 	if ( ! $plural ) {
-		$plural = $singular . 's';
+		$plural = __( 'Entries', 'crb' );
 	}
 	return array(
 		'singular_name' => $singular,
